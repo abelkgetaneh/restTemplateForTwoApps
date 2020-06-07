@@ -33,17 +33,17 @@ public class BookController {
 	@RequestMapping(method=RequestMethod.POST, value="/books")
 	public Book addBook(@RequestBody Book book) {
 		
-		bookService.addBook(book); 
+		return bookService.addBook(book); 
 		
-		return book;
+		//return book;
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT, value="/books/{id}")
 	public Book updateBook(@RequestBody Book book, @PathVariable Integer id) {
 		
-		bookService.updateBook(book, id); 
+		return bookService.updateBook(book, id); 
 		
-		return book;
+		//return book;
 	}
 	
 	@RequestMapping(method=RequestMethod.DELETE, value="/books/{id}")
