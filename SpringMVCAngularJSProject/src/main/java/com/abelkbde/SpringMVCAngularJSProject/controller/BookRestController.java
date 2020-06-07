@@ -29,12 +29,10 @@ public class BookRestController {
 		
 		LOGGER.info("Fetching all users");
 		
-		List<Book> books = bookService.findAllBooks();
+		ResponseEntity<List<Book>> books = bookService.findAllBooks();
 		
-		if(books.isEmpty()) {
-			return new ResponseEntity<List<Book>>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<List<Book>>(books, HttpStatus.OK);
+		return books;		
+		
 	}
 	
 	//----------------------Fetch Single Book--------------------------------------------------------------------
@@ -43,9 +41,9 @@ public class BookRestController {
 		
 		LOGGER.info("Fetching book with id " + id);
 		
-		Book book = bookService.findBookById(id);		
+		ResponseEntity<Book> book = bookService.findBookById(id);		
 		
-		return new ResponseEntity<Book>(book, HttpStatus.OK);
+		return book;
 	}
 	
 	//--------------------------Create a Book--------------------------------------------------
@@ -54,9 +52,8 @@ public class BookRestController {
 		
 		LOGGER.info("Creating book " + book.getId());
 		
-		bookService.createBook(book);
+		return bookService.createBook(book);
 		
-		return new ResponseEntity<Book>(book, HttpStatus.CREATED);
 	}
 	
 	//----------------------Update a Book---------------------------------------------------------
@@ -72,13 +69,13 @@ public class BookRestController {
 	
 	//---------------------Delete a Book------------------------------------------------------
 	@RequestMapping(value = "/book/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Book> deleteBook(@PathVariable("id") Integer id){
+	public ResponseEntity<Boolean> deleteBook(@PathVariable("id") Integer id){
 		
 		LOGGER.info("Fetching and deleting a book with title " + id);
 		
 		bookService.deleteBookById(id);
 		
-		return new ResponseEntity<Book>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Boolean>(HttpStatus.NO_CONTENT);
 	}
 	
 	

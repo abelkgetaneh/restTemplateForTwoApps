@@ -2,18 +2,20 @@ package com.abelkbde.SpringMVCAngularJSProject.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.abelkbde.SpringMVCAngularJSProject.model.Book;
 
 public interface BookService {
 
-	Book findBookById(Integer id);    
+	ResponseEntity<Book> findBookById(Integer id);    
      
-    Book createBook(Book book);
+	ResponseEntity<Book> createBook(Book book);
      
-    Book updateBook(Book book, Integer id);
+	ResponseEntity<Book> updateBook(Book book, Integer id);
      
-    Boolean deleteBookById(Integer id);
+    ResponseEntity<Void> deleteBookById(Integer id);
  
-    List<Book> findAllBooks();      
+    ResponseEntity<List<Book>> findAllBooks();      
     
 }

@@ -3,6 +3,12 @@ package com.abelkbde.SpringMVCAngularJSProject.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,53 +18,82 @@ import com.abelkbde.SpringMVCAngularJSProject.model.Book;
 public class BookServiceImpl implements BookService {
 
 	public static final String REST_SERVICE_URI = "http://localhost:3000/books";
-
-	public static final String REST_SERVICE_URI_ID = "http://localhost:3000/books/{id}";
 	
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Book> findAllBooks() {
+	public ResponseEntity<List<Book>> findAllBooks() {
 
-		List<Book> books = restTemplate.getForObject(REST_SERVICE_URI, List.class);
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.setContentType(MediaType.APPLICATION_JSON);		
+		
+		HttpEntity<List<Book>> requestEntity = new HttpEntity<>(headers);
+		
+		ResponseEntity<List<Book>> responseEntity = restTemplate.exchange(REST_SERVICE_URI, HttpMethod.GET, requestEntity, 
+				new ParameterizedTypeReference<List<Book>>() {
+		});
 
-		return books;
+		return responseEntity;
 	}
 
 	@Override
-	public Book findBookById(Integer id) {
+	public ResponseEntity<Book> findBookById(Integer id) {
 		
-		Book book = restTemplate.getForObject(REST_SERVICE_URI_ID, Book.class, id);
-
-		return book;
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.setContentType(MediaType.APPLICATION_JSON);		
+		
+		HttpEntity<Book> requestEntity = new HttpEntity<>(headers);		
+		
+		ResponseEntity<Book> responseEntity = restTemplate.exchange(REST_SERVICE_URI + "/{id}", HttpMethod.GET, requestEntity, Book.class, id);
+		
+		return responseEntity;		
 	}
 
 	@Override
-	public Book createBook(Book book) {
+	public ResponseEntity<Book> createBook(Book book) {		
 		
-		restTemplate.postForLocation(REST_SERVICE_URI, book, Book.class);
-
-		return book;
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.setContentType(MediaType.APPLICATION_JSON);		
+		
+		HttpEntity<Book> requestEntity = new HttpEntity<>(book, headers);
+		
+		ResponseEntity<Book> responseEntity = restTemplate.exchange(REST_SERVICE_URI, HttpMethod.POST, requestEntity, Book.class);
+		
+		return responseEntity;	
 
 	}
 
 	@Override
-	public Book updateBook(Book book, Integer id) {
+	public ResponseEntity<Book> updateBook(Book book, Integer id) {
 		
-		restTemplate.put(REST_SERVICE_URI_ID, book, id);
-
-		return book;
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.setContentType(MediaType.APPLICATION_JSON);		
+		
+		HttpEntity<Book> requestEntity = new HttpEntity<>(book, headers);		
+		
+		ResponseEntity<Book> responseEntity = restTemplate.exchange(REST_SERVICE_URI + "/{id}", HttpMethod.PUT, requestEntity, Book.class, id);
+		
+		return responseEntity;
 
 	}
 
 	@Override
-	public Boolean deleteBookById(Integer id) {
+	public ResponseEntity<Void> deleteBookById(Integer id) {
 		
-		restTemplate.delete(REST_SERVICE_URI_ID, id);
-
-		return true;
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.setContentType(MediaType.APPLICATION_JSON);		
+		
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);		
+		
+		ResponseEntity<Void> responseEntity = restTemplate.exchange(REST_SERVICE_URI + "/{id}", HttpMethod.DELETE, requestEntity, Void.class, id);
+		
+		return responseEntity;		
 	}
 
 }
